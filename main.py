@@ -1,6 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-import openai
+from openai import OpenAI
 import os
 
 
@@ -18,6 +18,22 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get('/')
-def root():
-    return {"Hello": "World"}
+client = OpenAI(
+    api_key = os.getenv("OPENAI_API_KEY")
+)
+
+@app.post('/api/travel-agent')
+async def get_travel_agent(request: Request):
+    data = await request.json()
+    user_query = data.get("query")
+
+    prompt = f"""You're a travel documentation assistant. Help with:
+    "{user_query}". 
+    Return visa requirements, passport info, advisories, and links."""
+
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": prompt}]
+    )
+
+    return {"answer": response.choices[0].message["content"]}
