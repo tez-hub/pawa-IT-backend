@@ -50,7 +50,7 @@ python -m venv venv
 source venv/bin/activate  # On Mac or Linux
 or 
 
-venv\Scripts\activate
+venv\Scripts\activate  # On windows
 ```
 
 3. Install dependancies
@@ -108,4 +108,110 @@ POST /register
 
 ## Login
 
+POST /login
 
+Logs in an existing user and returns a JWT token.
+
+### Form fields
+
+-   email: Email
+-   password: Password
+
+### Response
+
+```bash
+{
+  "access_token": "<JWT Token>",
+  "token_type": "bearer"
+}
+
+```
+
+### Ask a Travel question
+
+POST /ask
+
+Sends a travel related question to the gemini model and gets a response.
+
+### Headers
+
+-   Authorization: Bearer <token>
+
+### Body
+
+```bash
+{
+  "question": "What are the best places to visit in Tokyo?"
+}
+
+```
+
+### Response
+
+```bash
+{
+  "response": "Here are some top attractions in Tokyo..."
+}
+```
+
+The request and response are also saved in the database for future access.
+
+## Get Query history
+
+GET /history
+
+Returns all past questions and Gemini responses for the authenticated user.
+
+### Headers
+
+-   Authorization: Bearer <token>
+
+### Response
+
+```bash
+[
+  {
+    "question": "What are the best places to visit in Tokyo?",
+    "response": "Here are some top attractions in Tokyo..."
+  },
+  ...
+]
+
+```
+
+
+## Database Models
+
+### User
+
+-   user_id - Integer - Unique Id (primary Key)
+-   email - String - Uniques user email
+-   hashed_password - String - Password (hashed)
+
+
+### UserRequest
+
+-   id  -    Integer	    -   Request ID (Primary key)
+-   user_id	-   String	-   ID of the user who made the request
+-   question    -	String	-   The question asked
+-   response	-   Text	-   The Gemini response
+-   timestamp	-   DateTime	-   When the request was made
+
+
+## Security
+-   Passwords are hashed using bcrypt.
+-   JWT tokens expire in 60 minutes.
+-   All sensitive routes are protected using bearer token validation.
+
+
+## CORS
+CORS is enabled for local frontend development:
+
+-   http://localhost:3000
+
+-   http://127.0.0.1:3000
+
+
+## Gemini Model
+-   The app uses gemini-2.0-flash from Google’s Generative AI API.
+-   Make sure to provide a valid GEMINI_API_KEY in the .env file.
