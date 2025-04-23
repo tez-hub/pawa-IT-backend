@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker
 # Import datetime module to set default timestamp values
 from datetime import datetime
 
-# SQLite database URL (can be changed to PostgreSQL/MySQL URI if needed)
+# SQLite database URL (can be changed to PostgreSQL/MySQL URI)
 DATABASE_URL = "sqlite:///./travel_assistant.db"
 
 # Create a base class for the ORM models using declarative system

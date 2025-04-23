@@ -7,8 +7,14 @@ from jose import JWTError, jwt
 # Importing datetime classes for handling token expiration
 from datetime import datetime, timedelta
 
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from a .env file
+load_dotenv()
+
 # Constants for JWT token encoding
-SECRET_KEY = "your-secret-key"  # Secret key used to sign the JWT
+SECRET_KEY = os.getenv("SECRET_KEY") # Secret key used to sign the JWT
 ALGORITHM = "HS256"             # Hashing algorithm to use for signing the token
 ACCESS_TOKEN_EXPIRE_MINUTES = 60  # Token expiration time in minutes
 
